@@ -1,0 +1,137 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Employee Structure Definition
+typedef struct {
+    int id;
+    char name[50];
+    double salary;
+} Employee;
+
+// Global Dynamic Pointers & Tracking Variables
+Employee *employees = NULL;
+int emp_count = 0;
+int emp_capacity = 0;
+
+// Function to safely add an employee using realloc with a temporary pointer
+void add_employee(int id, const char *name, double salary) {
+    // Check if expansion is needed
+    if (emp_count >= emp_capacity) {
+        // Double capacity, or start with 4 if capacity is 0
+        int new_capacity = (emp_capacity == 0) ? 4 : emp_capacity * 2;
+
+        // Use a temporary pointer to protect against realloc failure (memory leak prevention)
+        Employee *temp = realloc(employees, new_capacity * sizeof(Employee));
+        if (temp == NULL) {
+            printf("[ERROR] Memory reallocation failed! Out of memory.\n");
+            return;
+        }
+
+        employees = temp;
+        emp_capacity = new_capacity;
+        printf("[DEBUG] Memory resized. New capacity: %d\n", emp_capacity);
+    }
+
+    // Populate the new record
+    employees[emp_count].id = id;
+    snprintf(employees[emp_count].name, sizeof(employees[emp_count].name), "%s", name);
+    employees[emp_count].salary = salary;
+    emp_count++;
+}
+
+// Function to display all employee records
+void display_employees() {
+    printf("\n====================================================\n");
+    printf("            MUNICIPAL EMPLOYEE RECORDS              \n");
+    printf("====================================================\n");
+    if (emp_count == 0) {
+        printf("No employee records found in memory.\n");
+        return;
+    }
+
+    double total_payroll = 0.0;
+    for (int i = 0; i < emp_count; i++) {
+        printf("ID: %-3d | Name: %-20s | Salary: NAD %.2f\n", 
+               employees[i].id, employees[i].name, employees[i].salary);
+        total_payroll += employees[i].salary;
+    }
+    printf("----------------------------------------------------\n");
+    printf("Total Employees: %d | Total Payroll: NAD %.2f\n", emp_count, total_payroll);
+    printf("====================================================\n");
+}
+
+// Function to run the test simulation with at least 10 employees
+void run_ten_employee_test() {
+    printf("\n--- STARTING AUTOMATED TEST RUN (10+ EMPLOYEES) ---\n");
+    
+    // Adding 10+ employees sequentially to trigger multiple reallocations
+    add_employee(101, "Alice Ndlovu", 24500.00);
+    add_employee(102, "Bob Smith", 19200.50);
+    add_employee(103, "Charlie Goliath", 31000.00);
+    add_employee(104, "Diana Shikongo", 28000.00);
+    add_employee(105, "Efraim Petrus", 15500.00);
+    add_employee(106, "Frieda van Wyk", 22000.00);
+    add_employee(107, "George Hamunyela", 27500.00);
+    add_employee(108, "Hanna Amakali", 35000.00);
+    add_employee(109, "Immanuel Kahuika", 18000.00);
+    add_employee(110, "Julia Nangolo", 29500.00);
+    add_employee(111, "Kano Katjiuongua", 21000.00); // 11th record
+
+    printf("Successfully added 11 records dynamically!\n");
+    display_employees();
+}
+
+int main() {
+    int choice;
+
+    do {
+        printf("\n=== MFMS DYNAMIC EMPLOYEE SYSTEM ===\n");
+        printf("1. Run Test Simulation (Load 11 Employees)\n");
+        printf("2. Add Custom Employee\n");
+        printf("3. Display All Employees\n");
+        printf("4. Exit and Free Memory\n");
+        printf("Enter your choice (1-4): ");
+
+        if (scanf("%d", &choice) != 1) {
+            while (getchar() != '\n');
+            continue;
+        }
+
+        switch (choice) {
+            case 1:
+                run_ten_employee_test();
+                break;
+            case 2: {
+                int id;
+                char name[50];
+                double salary;
+                printf("Enter ID: ");
+                scanf("%d", &id);
+                printf("Enter Name: ");
+                scanf(" %[^\n]", name);
+                printf("Enter Salary (NAD): ");
+                scanf("%lf", &salary);
+                add_employee(id, name, salary);
+                break;
+            }
+            case 3:
+                display_employees();
+                break;
+            case 4:
+                printf("\nExiting system... Freeing dynamically allocated memory.\n");
+                break;
+            default:
+                printf("Invalid choice.\n");
+        }
+    } while (choice != 4);
+
+    // Free allocated memory before program termination
+    if (employees != NULL) {
+        free(employees);
+        employees = NULL;
+        printf("Memory successfully freed via free().\n");
+    }
+
+    return 0;
+}
