@@ -1,0 +1,84 @@
+#include <stdio.h>
+
+int main() {
+    // Core variables
+    double total_revenue;
+    double total_expenses;
+    double balance;
+
+    // Extension exercise variables
+    int departments;
+    double payroll;
+    double procurement;
+    double assets;
+
+    // 1. Display the title
+    printf("========================================\n");
+    printf("       MUNICIPAL BUDGET CALCULATOR      \n");
+    printf("========================================\n\n");
+
+    // 2 & 3. Prompt user for Total Revenue and Total Expenses (stored as doubles)
+    printf("Enter Total Revenue ($): ");
+    if (scanf("%lf", &total_revenue) != 1) {
+        printf("Invalid input for revenue.\n");
+        return 1;
+    }
+
+    printf("Enter Total Expenses ($): ");
+    if (scanf("%lf", &total_expenses) != 1) {
+        printf("Invalid input for expenses.\n");
+        return 1;
+    }
+
+    // 4. Calculate the balance
+    balance = total_revenue - total_expenses;
+
+    // 5 & 6. Display Revenue, Expenses, and Balance (formatted to two decimal places)
+    printf("\n--- Basic Financial Summary ---\n");
+    printf("Revenue   : $%.2f\n", total_revenue);
+    printf("Expenses  : $%.2f\n", total_expenses);
+    printf("Balance   : $%.2f\n", balance);
+
+    // Extension Exercise Inputs
+    printf("\n--- Extension: Departmental Details ---\n");
+    
+    printf("Enter number of departments: ");
+    if (scanf("%d", &departments) != 1) {
+        printf("Invalid input for departments.\n");
+        return 1;
+    }
+
+    printf("Enter total payroll cost ($): ");
+    if (scanf("%lf", &payroll) != 1) {
+        printf("Invalid input for payroll.\n");
+        return 1;
+    }
+
+    printf("Enter total procurement cost ($): ");
+    if (scanf("%lf", &procurement) != 1) {
+        printf("Invalid input for procurement.\n");
+        return 1;
+    }
+
+    printf("Enter total assets value ($): ");
+    if (scanf("%lf", &assets) != 1) {
+        printf("Invalid input for assets.\n");
+        return 1;
+    }
+
+    // Extension Exercise Display: Comprehensive Municipal Financial Summary
+    printf("\n========================================\n");
+    printf("     COMPREHENSIVE MUNICIPAL SUMMARY    \n");
+    printf("========================================\n");
+    printf("Departments Count : %d\n", departments);
+    printf("Total Revenue     : $%.2f\n", total_revenue);
+    printf("Total Expenses    : $%.2f\n", total_expenses);
+    printf("Net Balance       : $%.2f\n", balance);
+    printf("Payroll Cost      : $%.2f\n", payroll);
+    printf("Procurement Cost  : $%.2f\n", procurement);
+    printf("Total Assets      : $%.2f\n", assets);
+    printf("========================================\n");
+
+    return 0;
+}
+	
