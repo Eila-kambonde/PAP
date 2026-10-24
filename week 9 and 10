@@ -1,0 +1,263 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#define MAX_RECORDS 50
+#define DATA_DIR "data"
+
+// Data Structures
+typedef struct {
+    int id;
+    char name[50];
+    double salary;
+} Employee;
+
+typedef struct {
+    int id;
+    char name[50];
+    double contract_amount;
+} Supplier;
+
+typedef struct {
+    int id;
+    char name[50];
+    double value;
+} Asset;
+
+typedef struct {
+    char department[50];
+    double revenue;
+    double expenses;
+} Budget;
+
+// Global Records & Counters
+Employee employees[MAX_RECORDS];
+int emp_count = 0;
+
+Supplier suppliers[MAX_RECORDS];
+int sup_count = 0;
+
+Asset assets[MAX_RECORDS];
+int asset_count = 0;
+
+Budget budgets[MAX_RECORDS];
+int budget_count = 0;
+
+// Helper: Ensure data directory exists
+void create_data_directory() {
+#ifdef _WIN32
+    mkdir(DATA_DIR);
+#else
+    mkdir(DATA_DIR, 0777);
+#endif
+}
+
+// -------------------------------------------------------------
+// TEXT SAVE FUNCTIONS
+// -------------------------------------------------------------
+void save_employees_text() {
+    FILE *fp = fopen("data/employees.txt", "w");
+    if (fp == NULL) {
+        perror("[ERROR] Failed to open data/employees.txt for writing");
+        return;
+    }
+    for (int i = 0; i < emp_count; i++) {
+        fprintf(fp, "%d,%s,%.2f\n", employees[i].id, employees[i].name, employees[i].salary);
+    }
+    fclose(fp);
+    printf("Successfully saved %d employee record(s) to text file.\n", emp_count);
+}
+
+void save_suppliers_text() {
+    FILE *fp = fopen("data/suppliers.txt", "w");
+    if (fp == NULL) {
+        perror("[ERROR] Failed to open data/suppliers.txt for writing");
+        return;
+    }
+    for (int i = 0; i < sup_count; i++) {
+        fprintf(fp, "%d,%s,%.2f\n", suppliers[i].id, suppliers[i].name, suppliers[i].contract_amount);
+    }
+    fclose(fp);
+    printf("Successfully saved %d supplier record(s) to text file.\n", sup_count);
+}
+
+void save_assets_text() {
+    FILE *fp = fopen("data/assets.txt", "w");
+    if (fp == NULL) {
+        perror("[ERROR] Failed to open data/assets.txt for writing");
+        return;
+    }
+    for (int i = 0; i < asset_count; i++) {
+        fprintf(fp, "%d,%s,%.2f\n", assets[i].id, assets[i].name, assets[i].value);
+    }
+    fclose(fp);
+    printf("Successfully saved %d asset record(s) to text file.\n", asset_count);
+}
+
+void save_budgets_text() {
+    FILE *fp = fopen("data/budgets.txt", "w");
+    if (fp == NULL) {
+        perror("[ERROR] Failed to open data/budgets.txt for writing");
+        return;
+    }
+    for (int i = 0; i < budget_count; i++) {
+        fprintf(fp, "%s,%.2f,%.2f\n", budgets[i].department, budgets[i].revenue, budgets[i].expenses);
+    }
+    fclose(fp);
+    printf("Successfully saved %d budget record(s) to text file.\n", budget_count);
+}
+
+void save_all_data_text() {
+    printf("\n--- Saving All System Data (Text Files) ---\n");
+    save_employees_text();
+    save_suppliers_text();
+    save_assets_text();
+    save_budgets_text();
+}
+
+// -------------------------------------------------------------
+// TEXT LOAD FUNCTIONS
+// -------------------------------------------------------------
+void load_employees_text() {
+    FILE *fp = fopen("data/employees.txt", "r");
+    if (fp == NULL) {
+        perror("[ERROR] Failed to open data/employees.txt for reading");
+        return;
+    }
+    emp_count = 0;
+    while (fscanf(fp, "%d,%49[^,],%lf\n", &employees[emp_count].id, employees[emp_count].name, &employees[emp_count].salary) == 3) {
+        emp_count++;
+        if (emp_count >= MAX_RECORDS) break;
+    }
+    fclose(fp);
+    printf("Successfully loaded %d employee record(s).\n", emp_count);
+}
+
+void load_suppliers_text() {
+    FILE *fp = fopen("data/suppliers.txt", "r");
+    if (fp == NULL) {
+        perror("[ERROR] Failed to open data/suppliers.txt for reading");
+        return;
+    }
+    sup_count = 0;
+    while (fscanf(fp, "%d,%49[^,],%lf\n", &suppliers[sup_count].id, suppliers[sup_count].name, &suppliers[sup_count].contract_amount) == 3) {
+        sup_count++;
+        if (sup_count >= MAX_RECORDS) break;
+    }
+    fclose(fp);
+    printf("Successfully loaded %d supplier record(s).\n", sup_count);
+}
+
+void load_assets_text() {
+    FILE *fp = fopen("data/assets.txt", "r");
+    if (fp == NULL) {
+        perror("[ERROR] Failed to open data/assets.txt for reading");
+        return;
+    }
+    asset_count = 0;
+    while (fscanf(fp, "%d,%49[^,],%lf\n", &assets[asset_count].id, assets[asset_count].name, &assets[asset_count].value) == 3) {
+        asset_count++;
+        if (asset_count >= MAX_RECORDS) break;
+    }
+    fclose(fp);
+    printf("Successfully loaded %d asset record(s).\n", asset_count);
+}
+
+void load_budgets_text() {
+    FILE *fp = fopen("data/budgets.txt", "r");
+    if (fp == NULL) {
+        perror("[ERROR] Failed to open data/budgets.txt for reading");
+        return;
+    }
+    budget_count = 0;
+    while (fscanf(fp, "%49[^,],%lf,%lf\n", budgets[budget_count].department, &budgets[budget_count].revenue, &budgets[budget_count].expenses) == 3) {
+        budget_count++;
+        if (budget_count >= MAX_RECORDS) break;
+    }
+    fclose(fp);
+    printf("Successfully loaded %d budget record(s).\n", budget_count);
+}
+
+void load_all_data_text() {
+    printf("\n--- Loading All System Data (Text Files) ---\n");
+    load_employees_text();
+    load_suppliers_text();
+    load_assets_text();
+    load_budgets_text();
+}
+
+// -------------------------------------------------------------
+// UI & RECORD ADDITION HELPERS
+// -------------------------------------------------------------
+void add_sample_data() {
+    emp_count = 2;
+    employees[0] = (Employee){101, "Alice Ndlovu", 25000.00};
+    employees[1] = (Employee){102, "Bob Smith", 18500.00};
+
+    sup_count = 2;
+    suppliers[0] = (Supplier){201, "BuildCo Namibia", 150000.00};
+    suppliers[1] = (Supplier){202, "SolarTech Ltd", 85000.00};
+
+    asset_count = 2;
+    assets[0] = (Asset){301, "Municipal Truck #4", 450000.00};
+    assets[1] = (Asset){302, "HQ Generator", 120000.00};
+
+    budget_count = 2;
+    budgets[0] = (Budget){"Public Works", 500000.00, 420000.00};
+    budgets[1] = (Budget){"Health Services", 300000.00, 280000.00};
+
+    printf("\nSample data added into memory.\n");
+}
+
+void display_records() {
+    printf("\n================ CURRENT MFMS RECORDS ================\n");
+    printf("-- EMPLOYEES (%d) --\n", emp_count);
+    for (int i = 0; i < emp_count; i++)
+        printf("ID: %d | Name: %-15s | Salary: NAD %.2f\n", employees[i].id, employees[i].name, employees[i].salary);
+
+    printf("\n-- SUPPLIERS (%d) --\n", sup_count);
+    for (int i = 0; i < sup_count; i++)
+        printf("ID: %d | Name: %-15s | Contract: NAD %.2f\n", suppliers[i].id, suppliers[i].name, suppliers[i].contract_amount);
+
+    printf("\n-- ASSETS (%d) --\n", asset_count);
+    for (int i = 0; i < asset_count; i++)
+        printf("ID: %d | Name: %-15s | Value: NAD %.2f\n", assets[i].id, assets[i].name, assets[i].value);
+
+    printf("\n-- BUDGETS (%d) --\n", budget_count);
+    for (int i = 0; i < budget_count; i++)
+        printf("Dept: %-15s | Rev: NAD %.2f | Exp: NAD %.2f\n", budgets[i].department, budgets[i].revenue, budgets[i].expenses);
+    printf("=====================================================\n");
+}
+
+int main() {
+    create_data_directory();
+    int choice;
+
+    do {
+        printf("\n=== MUNICIPAL FINANCIAL MANAGEMENT SYSTEM (Text Mode) ===\n");
+        printf("1. Add Sample Data to Memory\n");
+        printf("2. Display Current Memory Records\n");
+        printf("3. Save Data (Text Files)\n");
+        printf("4. Load Data (Text Files)\n");
+        printf("5. Exit\n");
+        printf("Enter your choice (1-5): ");
+
+        if (scanf("%d", &choice) != 1) {
+            while (getchar() != '\n');
+            continue;
+        }
+
+        switch (choice) {
+            case 1: add_sample_data(); break;
+            case 2: display_records(); break;
+            case 3: save_all_data_text(); break;
+            case 4: load_all_data_text(); break;
+            case 5: printf("Exiting system...\n"); break;
+            default: printf("Invalid choice.\n");
+        }
+    } while (choice != 5);
+
+    return 0;
+}
