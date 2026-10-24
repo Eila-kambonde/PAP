@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+int main() {
+    // Variable declarations
+    double basic_salary;
+    double allowances;
+    double deductions;
+    double gross_salary;
+    double net_salary;
+
+    // Display the title
+    printf("========================================\n");
+    printf("       EMPLOYEE SALARY CALCULATOR       \n");
+    printf("========================================\n\n");
+
+    // Prompt user for salary components
+    printf("Enter Basic Salary (NAD): ");
+    if (scanf("%lf", &basic_salary) != 1) {
+        printf("Invalid input for basic salary.\n");
+        return 1;
+    }
+
+    printf("Enter Allowances (NAD): ");
+    if (scanf("%lf", &allowances) != 1) {
+        printf("Invalid input for allowances.\n");
+        return 1;
+    }
+
+    printf("Enter Deductions (NAD): ");
+    if (scanf("%lf", &deductions) != 1) {
+        printf("Invalid input for deductions.\n");
+        return 1;
+    }
+
+    // 1. Calculate Gross Salary using arithmetic (+) and assignment (=) operators
+    gross_salary = basic_salary + allowances;
+
+    // 2. Calculate Net Salary using arithmetic (-) and assignment (=) operators
+    net_salary = gross_salary - deductions;
+
+    // Display financial breakdown
+    printf("\n--- Salary Breakdown ---\n");
+    printf("Gross Salary : NAD %.2f\n", gross_salary);
+    printf("Net Salary   : NAD %.2f\n", net_salary);
+
+    // 3 & 4. Evaluate Net Salary using relational operator (>=) and if...else
+    printf("Income Category: ");
+    if (net_salary >= 20000.0) {
+        printf("High Income\n");
+    } else {
+        printf("Standard Income\n");
+    }
+    printf("========================================\n");
+
+    return 0;
+}
