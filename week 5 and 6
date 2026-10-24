@@ -1,0 +1,94 @@
+#include <stdio.h>
+
+#define MAX_EMP 50
+
+int main() {
+    double salaries[MAX_EMP];
+    int i, j;
+    double total = 0.0, average = 0.0;
+    double highest, lowest;
+    double search_val;
+    int found = 0;
+    double temp;
+
+    // Display the title
+    printf("========================================\n");
+    printf("    MUNICIPAL EMPLOYEE SALARY SYSTEM    \n");
+    printf("========================================\n\n");
+
+    // 1 & 2. Capture salaries for 50 employees into an array using a loop
+    printf("Please enter the salaries for %d employees:\n", MAX_EMP);
+    for (i = 0; i < MAX_EMP; i++) {
+        printf("Employee %d salary (NAD): ", i + 1);
+        if (scanf("%lf", &salaries[i]) != 1) {
+            printf("Invalid input. Please enter a valid number.\n");
+            return 1;
+        }
+    }
+
+    // 3. Display all entered salaries
+    printf("\n--- Entered Salaries Summary ---\n");
+    for (i = 0; i < MAX_EMP; i++) {
+        printf("Employee %d: NAD %.2f\n", i + 1, salaries[i]);
+    }
+
+    // 4 & 5. Calculate total salary expenditure and average salary
+    for (i = 0; i < MAX_EMP; i++) {
+        total += salaries[i];
+    }
+    average = total / MAX_EMP;
+
+    // 6 & 7. Find the highest and lowest salary
+    highest = salaries[0];
+    lowest = salaries[0];
+    for (i = 1; i < MAX_EMP; i++) {
+        if (salaries[i] > highest) {
+            highest = salaries[i];
+        }
+        if (salaries[i] < lowest) {
+            lowest = salaries[i];
+        }
+    }
+
+    // Display financial metrics
+    printf("\n--- Municipal Payroll Statistics ---\n");
+    printf("Total Salary Expenditure : NAD %.2f\n", total);
+    printf("Average Salary           : NAD %.2f\n", average);
+    printf("Highest Salary           : NAD %.2f\n", highest);
+    printf("Lowest Salary            : NAD %.2f\n", lowest);
+
+    // 8. Search for a particular salary
+    printf("\nEnter a salary to search for (NAD): ");
+    if (scanf("%lf", &search_val) == 1) {
+        printf("Search Results for NAD %.2f:\n", search_val);
+        for (i = 0; i < MAX_EMP; i++) {
+            if (salaries[i] == search_val) {
+                printf(" - Match found at Employee #%d\n", i + 1);
+                found = 1;
+            }
+        }
+        if (!found) {
+            printf(" - Salary not found in the records.\n");
+        }
+    }
+
+    // 9. Sort salaries from lowest to highest using Bubble Sort
+    for (i = 0; i < MAX_EMP - 1; i++) {
+        for (j = 0; j < MAX_EMP - i - 1; j++) {
+            if (salaries[j] > salaries[j + 1]) {
+                temp = salaries[j];
+                salaries[j] = salaries[j + 1];
+                salaries[j + 1] = temp;
+            }
+        }
+    }
+
+    // 10. Display the sorted salaries
+    printf("\n--- Salaries Sorted (Lowest to Highest) ---\n");
+    for (i = 0; i < MAX_EMP; i++) {
+        printf("Rank %2d: NAD %.2f\n", i + 1, salaries[i]);
+    }
+    printf("========================================\n");
+
+    return 0;
+}
